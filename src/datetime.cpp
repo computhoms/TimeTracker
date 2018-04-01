@@ -88,3 +88,47 @@ TimeOfDay DateTime::getTimeOfDay() const
     return _time;
 }
 
+bool operator<(const DateTime &d1, const DateTime &d2)
+{
+    return getDiffTime(d1, d2) > 0;
+}
+
+bool operator<=(const DateTime &d1, const DateTime &d2)
+{
+    return getDiffTime(d1, d2) >= 0;
+}
+
+double getDiffTime(const DateTime &d1, const DateTime &d2)
+{
+    struct tm dtm1 = {0};
+    dtm1.tm_year = d1.getDate().year - 1900;
+    dtm1.tm_mon = d1.getDate().month;
+    dtm1.tm_mday = d1.getDate().dayOfMonth;
+    dtm1.tm_hour = d1.getTimeOfDay().hours;
+    dtm1.tm_min = d1.getTimeOfDay().minutes;
+    dtm1.tm_sec = d1.getTimeOfDay().seconds;
+
+    struct tm dtm2 = {0};
+    dtm2.tm_year = d2.getDate().year - 1900;
+    dtm2.tm_mon = d2.getDate().month;
+    dtm2.tm_mday = d2.getDate().dayOfMonth;
+    dtm2.tm_hour = d2.getTimeOfDay().hours;
+    dtm2.tm_min = d2.getTimeOfDay().minutes;
+    dtm2.tm_sec = d2.getTimeOfDay().seconds;
+
+    time_t t1 = mktime(&dtm1);
+    time_t t2 = mktime(&dtm2);
+    return difftime(t2, t1);
+}
+
+
+bool operator>(const DateTime &d1, const DateTime &d2)
+{
+    return getDiffTime(d1, d2) < 0;
+}
+
+
+bool operator>=(const DateTime &d1, const DateTime &d2)
+{
+    return getDiffTime(d1, d2) <= 0;
+}

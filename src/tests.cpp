@@ -25,6 +25,14 @@ TEST_CASE("DateTime::IsSameDayAs")
     REQUIRE(DateTime::areDatesEqual(dt1.getDate(), dt2.getDate()));
 }
 
+TEST_CASE("DateTime::operator<")
+{
+    DateTime dt1(Date(2018, 01, 01), TimeOfDay());
+    DateTime dt2(Date(2018, 01, 02), TimeOfDay());
+
+    REQUIRE(dt1 < dt2);
+}
+
 TEST_CASE("GeneralWorkPeriod getDuration")
 {
     GeneralWorkPeriod wp;
@@ -57,9 +65,9 @@ TEST_CASE("TimeTracker::getWorkDay returns 'Null' workday if nothing exists")
 {
     TimeTracker tt;
     WorkDay wd = tt.getWorkDay(Date());
-    REQUIRE(wd.getDay().year == 0);
-    REQUIRE(wd.getDay().month == 0);
-    REQUIRE(wd.getDay().dayOfMonth == 0);
+    REQUIRE(wd.getTime().getDate().year == 0);
+    REQUIRE(wd.getTime().getDate().month == 0);
+    REQUIRE(wd.getTime().getDate().dayOfMonth == 0);
 }
 
 TEST_CASE("TimeTracker::getWorkDay returns write workday if exists")
@@ -70,19 +78,19 @@ TEST_CASE("TimeTracker::getWorkDay returns write workday if exists")
     TimeTracker tt;
     tt.addWorkDay(existingWd);
 
-    REQUIRE(tt.getWorkDay(testingWd.getDay()).getDay().year == existingWd.getDay().year);
-    REQUIRE(tt.getWorkDay(testingWd.getDay()).getDay().month == existingWd.getDay().month);
-    REQUIRE(tt.getWorkDay(testingWd.getDay()).getDay().dayOfMonth == existingWd.getDay().dayOfMonth);
+    REQUIRE(tt.getWorkDay(testingWd.getTime().getDate()).getTime().getDate().year == existingWd.getTime().getDate().year);
+    REQUIRE(tt.getWorkDay(testingWd.getTime().getDate()).getTime().getDate().month == existingWd.getTime().getDate().month);
+    REQUIRE(tt.getWorkDay(testingWd.getTime().getDate()).getTime().getDate().dayOfMonth == existingWd.getTime().getDate().dayOfMonth);
 }
 
 TEST_CASE("TimeTracker::startWorking adds a workDay")
 {
     TimeTracker tt;
     WorkDay emptyWordDay = tt.getWorkDay((DateTime::today().getDate()));
-    REQUIRE(DateTime::areDatesEqual(emptyWordDay.getDay(), Date()));
+    REQUIRE(DateTime::areDatesEqual(emptyWordDay.getTime().getDate(), Date()));
     tt.startWorking();
     WorkDay wd = tt.getWorkDay(DateTime::today().getDate());
-    REQUIRE(DateTime::areDatesEqual(wd.getDay(), Date()) == false);
+    REQUIRE(DateTime::areDatesEqual(wd.getTime().getDate(), Date()) == false);
 }
 
 TEST_CASE("TimeTracker::getWorkingDurationOfToday")

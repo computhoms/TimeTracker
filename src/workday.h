@@ -21,7 +21,7 @@ public:
 
     void addWorkPeriod(GeneralWorkPeriod p);
 
-    Date getDay() const;
+    DateTime getTime() const;
     GeneralWorkPeriod *getCurrentWorkPeriod() const;
 
 private:

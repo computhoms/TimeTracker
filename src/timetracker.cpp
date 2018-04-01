@@ -40,20 +40,27 @@ DateTime TimeTracker::getWorkingDurationOfToday() const
     WorkDay existing = getWorkDay(DateTime::today().getDate());
     if (!existing.isNull())
     {
-        return DateTime(DateTime::today().getDate(), TimeOfDay(existing.getWorkTime(), 0, 0));
+        return DateTime(Date(), TimeOfDay(existing.getWorkTime(), 0, 0));
     }
     return DateTime(Date(0, 0, 0), TimeOfDay(0, 0, 0));
 }
 
 DateTime TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) const
 {
-    return DateTime();
+    double workDimeAsHours = 0;
+    for (size_t i(0); i < workDays.size(); ++i)
+    {
+        WorkDay d = workDays[i];
+        if (d.getTime() >= from && d.getTime() <= to)
+            workDimeAsHours += d.getWorkTime();
+    }
+    return DateTime(Date(), TimeOfDay(workDimeAsHours, 0, 0));
 }
 
 WorkDay TimeTracker::getWorkDay(Date day) const
 {
     for (size_t i(0); i < workDays.size(); ++i)
-        if (DateTime::areDatesEqual(workDays[i].getDay(), day))
+        if (workDays[i].getTime().isSameDayAs(DateTime(day, TimeOfDay())))
             return workDays[i];
     return WorkDay(Date(0, 0, 0));
 }

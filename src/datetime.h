@@ -83,4 +83,10 @@ private:
     time_t createLocalTime(double reference) const;
 };
 
+bool operator<(DateTime const &d1, DateTime const &d2);
+bool operator<=(DateTime const &d1, DateTime const &d2);
+bool operator>(DateTime const &d1, DateTime const &d2);
+bool operator>=(DateTime const &d1, DateTime const &d2);
+double getDiffTime(const DateTime &d1, const DateTime &d2);
+
 #endif // DATETIME_H

@@ -44,9 +44,9 @@ void WorkDay::addWorkPeriod(GeneralWorkPeriod p)
 }
 
 
-Date WorkDay::getDay() const
+DateTime WorkDay::getTime() const
 {
-    return _day;
+    return DateTime(_day, TimeOfDay());
 }
 
 GeneralWorkPeriod *WorkDay::getCurrentWorkPeriod() const
