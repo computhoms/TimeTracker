@@ -12,7 +12,13 @@ TimeTracker::~TimeTracker()
 
 void TimeTracker::startWorking()
 {
-
+    WorkDay existing = getWorkDay(Date::today());
+    if (existing.isNull())
+    {
+        existing = WorkDay(Date::today());
+        workDays.push_back(existing);
+    }
+    existing.addWorkPeriod(GeneralWorkPeriod(DateTime::now()));
 }
 
 void TimeTracker::stopWorking()
@@ -40,6 +46,6 @@ WorkDay TimeTracker::getWorkDay(Date day) const
     for (size_t i(0); i < workDays.size(); ++i)
         if (workDays[i].getDay().equals(day))
             return workDays[i];
-    return WorkDay(day);
+    return WorkDay(Date(0, 0, 0));
 }
 

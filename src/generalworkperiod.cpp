@@ -1,15 +1,22 @@
 #include "generalworkperiod.h"
 
 GeneralWorkPeriod::GeneralWorkPeriod():
-    start       (DateTime(0)),
-    end         (DateTime(0))
+    _start       (DateTime(0)),
+    _end         (DateTime(0))
+{
+
+}
+
+GeneralWorkPeriod::GeneralWorkPeriod(DateTime start):
+    _start       (start),
+    _end         (DateTime(0))
 {
 
 }
 
 GeneralWorkPeriod::GeneralWorkPeriod(DateTime s, DateTime e):
-    start   (s),
-    end     (e)
+    _start   (s),
+    _end     (e)
 {
 
 }
@@ -20,26 +27,26 @@ GeneralWorkPeriod::~GeneralWorkPeriod()
 }
 DateTime GeneralWorkPeriod::getStart() const
 {
-    return start;
+    return _start;
 }
 
 void GeneralWorkPeriod::setStart(const DateTime &value)
 {
-    start = value;
+    _start = value;
 }
 DateTime GeneralWorkPeriod::getEnd() const
 {
-    return end;
+    return _end;
 }
 
 void GeneralWorkPeriod::setEnd(const DateTime &value)
 {
-    end = value;
+    _end = value;
 }
 
 DateTime GeneralWorkPeriod::getDuration() const
 {
-    return end.distanceTo(start);
+    return _end.distanceTo(_start);
 }
 
 

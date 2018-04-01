@@ -34,6 +34,11 @@ Date Date::today()
     return Date();
 }
 
+Date Date::null()
+{
+    return Date(0, 0, 0);
+}
+
 bool Date::equals(Date d) const
 {
     return _year == d.getYear() && _month == d.getMonth() && _day == d.getDay();

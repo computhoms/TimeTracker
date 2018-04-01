@@ -13,6 +13,7 @@ public:
     ~Date();
 
     static Date today();
+    static Date null();
 
     bool equals(Date d) const;
 

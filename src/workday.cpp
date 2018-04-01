@@ -17,6 +17,11 @@ WorkDay::~WorkDay()
 
 }
 
+bool WorkDay::isNull()
+{
+    return day.equals(Date::null());
+}
+
 double WorkDay::getWorkTime() const
 {
     double totalWorkTime(0);

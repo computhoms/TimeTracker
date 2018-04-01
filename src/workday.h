@@ -15,6 +15,8 @@ public:
     WorkDay(Date d);
     ~WorkDay();
 
+    bool isNull();
+
     double getWorkTime() const;
 
     void addWorkPeriod(GeneralWorkPeriod p);

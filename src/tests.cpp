@@ -47,11 +47,11 @@ TEST_CASE("WorkDay::getWorkTime")
     REQUIRE(d.getWorkTime() == 5);
 }
 
-TEST_CASE("TimeTracker::getWorkDay returns new workday if nothing exists")
+TEST_CASE("TimeTracker::getWorkDay returns 'Null' workday if nothing exists")
 {
     TimeTracker tt;
     WorkDay wd = tt.getWorkDay(Date());
-    REQUIRE(wd.getDay().equals(DateTime::now().getDate()));
+    REQUIRE(wd.getDay().equals(Date(0, 0, 0)));
 }
 
 TEST_CASE("TimeTracker::getWorkDay returns write workday if exists")
@@ -63,4 +63,12 @@ TEST_CASE("TimeTracker::getWorkDay returns write workday if exists")
     tt.addWorkDay(existingWd);
 
     REQUIRE(tt.getWorkDay(testingWd.getDay()).getDay().equals(existingWd.getDay()));
+}
+
+TEST_CASE("TimeTracker::startWorking adds a workDay")
+{
+    TimeTracker tt;
+    REQUIRE(tt.getWorkDay(Date::today()).getDay().equals(Date(0, 0, 0)));
+    tt.startWorking();
+    REQUIRE(tt.getWorkDay(Date::today()).getDay().equals(Date(0, 0, 0)) == false);
 }
