@@ -1,7 +1,7 @@
 #include "workday.h"
 
 WorkDay::WorkDay():
-    _day                 (Date::today()),
+    _day                 (DateTime::today().getDate()),
     _currentWorkPeriod   (NULL)
 {
 
@@ -21,7 +21,7 @@ WorkDay::~WorkDay()
 
 bool WorkDay::isNull()
 {
-    return _day.equals(Date::null());
+    return DateTime::areDatesEqual(_day, Date());
 }
 
 double WorkDay::getWorkTime() const
@@ -30,7 +30,7 @@ double WorkDay::getWorkTime() const
     for (size_t i(0); i < workPeriods.size(); ++i)
     {
         DateTime duration = workPeriods[i].getDuration();
-        double durationInHours = duration.getTimeOfDay().getTotalHours();
+        double durationInHours = DateTime::getTotalHoursOf(duration.getTimeOfDay());
         // TODO get duraiton days
         totalWorkTime += durationInHours;
     }

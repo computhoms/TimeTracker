@@ -1,15 +1,15 @@
 #include "generalworkperiod.h"
 
 GeneralWorkPeriod::GeneralWorkPeriod():
-    _start       (DateTime(Date::null(), TimeOfDay(0, 0, 0))),
-    _end         (DateTime(Date::null(), TimeOfDay(0, 0, 0)))
+    _start       (DateTime()),
+    _end         (DateTime())
 {
 
 }
 
 GeneralWorkPeriod::GeneralWorkPeriod(DateTime start):
     _start       (start),
-    _end         (DateTime(Date::null(), TimeOfDay(0, 0, 0)))
+    _end         (DateTime())
 {
 
 }
