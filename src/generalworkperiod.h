@@ -3,6 +3,9 @@
 
 #include "datetime.h"
 
+/**
+ * @brief The GeneralWorkPeriod class represents a working period with start and end time.
+ */
 class GeneralWorkPeriod
 {
 public:

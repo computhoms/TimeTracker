@@ -1,6 +1,13 @@
 #include "workday.h"
 
-WorkDay::WorkDay()
+WorkDay::WorkDay():
+    day (Date::today())
+{
+
+}
+
+WorkDay::WorkDay(Date d):
+    day (d)
 {
 
 }
@@ -22,4 +29,11 @@ void WorkDay::addWorkPeriod(GeneralWorkPeriod p)
 {
     workPeriods.push_back(p);
 }
+
+
+Date WorkDay::getDay() const
+{
+    return day;
+}
+
 

@@ -2,21 +2,19 @@
 
 
 DateTime::DateTime():
-    thisTime    (time(NULL))
+    thisTime    (time(NULL)),
+    _date   (Date()),
+    _time   (TimeOfDay())
 {
 
 }
 
 DateTime::DateTime(double refValue)
 {
-    struct tm timeTm = {0};
-    timeTm.tm_hour = 0;
-    timeTm.tm_year = 100;
-    timeTm.tm_min = 0;
-    timeTm.tm_mon = 0;
-    timeTm.tm_sec = refValue;
-    timeTm.tm_mday = 1;
-    thisTime = mktime(&timeTm);
+    thisTime = createLocalTime(refValue);
+    struct tm lt = (*localtime(&thisTime));
+    _date = Date(lt.tm_year, lt.tm_mon, lt.tm_mday);
+    _time = TimeOfDay(lt.tm_hour, lt.tm_min, lt.tm_sec);
 }
 
 DateTime::~DateTime()
@@ -42,8 +40,30 @@ double DateTime::getReference() const
     return difftime(thisTime, mktime(&refTime));
 }
 
+time_t DateTime::createLocalTime(double reference) const
+{
+    struct tm drefTime = {0};
+    drefTime.tm_hour = 0;
+    drefTime.tm_year = 100;
+    drefTime.tm_min = 0;
+    drefTime.tm_mon = 0;
+    drefTime.tm_sec = reference;
+    drefTime.tm_mday = 1;
+    return mktime(&drefTime);
+}
+
 DateTime DateTime::now()
 {
     return DateTime();
+}
+
+Date DateTime::getDate() const
+{
+    return _date;
+}
+
+TimeOfDay DateTime::getTimeOfDay() const
+{
+    return _time;
 }
 

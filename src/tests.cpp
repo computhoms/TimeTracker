@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "../../libs/catch/catch.hpp"
 #include "workday.h"
+#include "timetracker.h"
 
 
 TEST_CASE("DateTime constructor with refTime argument")
@@ -16,6 +17,13 @@ TEST_CASE("DateTime::distanceTo")
 
     DateTime dist = dt1.distanceTo(dt2);
     REQUIRE(dist.getReference() == -1.0);
+}
+
+TEST_CASE("DateTime::IsSameDayAs")
+{
+    DateTime dt1(DateTime::now());
+    DateTime dt2(DateTime::now());
+    REQUIRE(dt1.getDate().equals(dt2.getDate()));
 }
 
 TEST_CASE("GeneralWorkPeriod getDuration")
@@ -37,4 +45,22 @@ TEST_CASE("WorkDay::getWorkTime")
     d.addWorkPeriod(p2);
 
     REQUIRE(d.getWorkTime() == 5);
+}
+
+TEST_CASE("TimeTracker::getWorkDay returns new workday if nothing exists")
+{
+    TimeTracker tt;
+    WorkDay wd = tt.getWorkDay(Date());
+    REQUIRE(wd.getDay().equals(DateTime::now().getDate()));
+}
+
+TEST_CASE("TimeTracker::getWorkDay returns write workday if exists")
+{
+    WorkDay existingWd(Date(2018, 01, 01));
+    WorkDay testingWd(Date(2018, 01, 01));
+
+    TimeTracker tt;
+    tt.addWorkDay(existingWd);
+
+    REQUIRE(tt.getWorkDay(testingWd.getDay()).getDay().equals(existingWd.getDay()));
 }
