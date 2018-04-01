@@ -1,13 +1,15 @@
 #include "workday.h"
 
 WorkDay::WorkDay():
-    day (Date::today())
+    _day                 (Date::today()),
+    _currentWorkPeriod   (NULL)
 {
 
 }
 
 WorkDay::WorkDay(Date d):
-    day (d)
+    _day (d),
+    _currentWorkPeriod  (NULL)
 {
 
 }
@@ -19,7 +21,7 @@ WorkDay::~WorkDay()
 
 bool WorkDay::isNull()
 {
-    return day.equals(Date::null());
+    return _day.equals(Date::null());
 }
 
 double WorkDay::getWorkTime() const
@@ -38,12 +40,18 @@ double WorkDay::getWorkTime() const
 void WorkDay::addWorkPeriod(GeneralWorkPeriod p)
 {
     workPeriods.push_back(p);
+    _currentWorkPeriod = &workPeriods.back();
 }
 
 
 Date WorkDay::getDay() const
 {
-    return day;
+    return _day;
+}
+
+GeneralWorkPeriod *WorkDay::getCurrentWorkPeriod() const
+{
+    return _currentWorkPeriod;
 }
 
 

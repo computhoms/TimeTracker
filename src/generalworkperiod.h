@@ -10,8 +10,8 @@ class GeneralWorkPeriod
 {
 public:
     GeneralWorkPeriod();
-    GeneralWorkPeriod(DateTime _start);
-    GeneralWorkPeriod(DateTime _start, DateTime _end);
+    GeneralWorkPeriod(DateTime start);
+    GeneralWorkPeriod(DateTime start, DateTime end);
     ~GeneralWorkPeriod();
 
     DateTime getStart() const;

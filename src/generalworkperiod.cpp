@@ -14,9 +14,9 @@ GeneralWorkPeriod::GeneralWorkPeriod(DateTime start):
 
 }
 
-GeneralWorkPeriod::GeneralWorkPeriod(DateTime s, DateTime e):
-    _start   (s),
-    _end     (e)
+GeneralWorkPeriod::GeneralWorkPeriod(DateTime start, DateTime end):
+    _start   (start),
+    _end     (end)
 {
 
 }

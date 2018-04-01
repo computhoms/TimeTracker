@@ -28,18 +28,6 @@ DateTime DateTime::distanceTo(DateTime a) const
     return DateTime(dateDist, timeDist);
 }
 
-//time_t DateTime::createLocalTime(double reference) const
-//{
-//    struct tm drefTime = {0};
-//    drefTime.tm_hour = 0;
-//    drefTime.tm_year = 100;
-//    drefTime.tm_min = 0;
-//    drefTime.tm_mon = 0;
-//    drefTime.tm_sec = reference;
-//    drefTime.tm_mday = 1;
-//    return mktime(&drefTime);
-//}
-
 DateTime DateTime::now()
 {
     return DateTime();

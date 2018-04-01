@@ -23,7 +23,11 @@ void TimeTracker::startWorking()
 
 void TimeTracker::stopWorking()
 {
-
+    WorkDay existing = getWorkDay(Date::today());
+    if (!existing.isNull() && existing.getCurrentWorkPeriod() != NULL)
+    {
+        existing.getCurrentWorkPeriod()->setEnd(DateTime::now());
+    }
 }
 
 void TimeTracker::addWorkDay(WorkDay wd)
@@ -33,7 +37,12 @@ void TimeTracker::addWorkDay(WorkDay wd)
 
 DateTime TimeTracker::getWorkingDurationOfToday() const
 {
-    return DateTime();
+    WorkDay existing = getWorkDay(Date::today());
+    if (!existing.isNull())
+    {
+        return DateTime(Date::today(), TimeOfDay(existing.getWorkTime(), 0, 0));
+    }
+    return DateTime(Date(0, 0, 0), TimeOfDay(0, 0, 0));
 }
 
 DateTime TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) const

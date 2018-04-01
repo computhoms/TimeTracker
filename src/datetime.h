@@ -16,12 +16,13 @@ public:
     ~DateTime();
 
     static DateTime now();
+    // static DateTime today();
+    // static WeekNumber => DateTime.weekNumber
 
     Date getDate() const;
     TimeOfDay getTimeOfDay() const;
 
     DateTime distanceTo(DateTime a) const;
-//    double getReference() const;
 
 private:
     Date _date;

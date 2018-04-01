@@ -110,3 +110,20 @@ TEST_CASE("TimeTracker::startWorking adds a workDay")
     tt.startWorking();
     REQUIRE(tt.getWorkDay(Date::today()).getDay().equals(Date(0, 0, 0)) == false);
 }
+
+TEST_CASE("TimeTracker::getWorkingDurationOfToday")
+{
+    TimeTracker tt;
+    WorkDay wd(Date::today());
+    wd.addWorkPeriod(GeneralWorkPeriod(
+                         DateTime(Date(2018, 1, 1), TimeOfDay(10, 0, 0)),
+                         DateTime(Date(2018, 1, 1), TimeOfDay(12, 0, 0))));
+    tt.addWorkDay(wd);
+
+    REQUIRE(tt.getWorkingDurationOfToday().getTimeOfDay().getHour() == 2);
+}
+
+// TODO
+// - Refactor dates to add a "Duration" class?
+// - Refactor dates to convert Date and TimeOfDay into structs and group functions in DateTime class
+// - Finish implementing TimeTracker class

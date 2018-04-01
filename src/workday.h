@@ -22,12 +22,14 @@ public:
     void addWorkPeriod(GeneralWorkPeriod p);
 
     Date getDay() const;
+    GeneralWorkPeriod *getCurrentWorkPeriod() const;
 
 private:
     std::vector<GeneralWorkPeriod> workPeriods;
     std::vector<JournalEntry> journalEntries;
-    Date day;
+    Date _day;
 
+    GeneralWorkPeriod *_currentWorkPeriod;
 };
 
 #endif // WORKDAY_H
