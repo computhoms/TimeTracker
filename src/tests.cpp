@@ -3,20 +3,52 @@
 #include "workday.h"
 #include "timetracker.h"
 
-
-TEST_CASE("DateTime constructor with refTime argument")
+TEST_CASE("Date::distanceTo")
 {
-    DateTime dt(1);
-    REQUIRE(dt.getReference() == 1);
+    Date d1(2018, 01, 02);
+    Date d2(2018, 01, 30);
+
+    Date dist = d1.distanceTo(d2);
+    REQUIRE(dist.getYear() == 0);
+    REQUIRE(dist.getMonth() == 0);
+    REQUIRE(dist.getDay() == 28);
+}
+
+TEST_CASE("Date::distanceTo2")
+{
+    Date d1(2018, 01, 02);
+    Date d2(2021, 04, 02);
+
+    Date dist = d1.distanceTo(d2);
+    REQUIRE(dist.getYear() == 3);
+    REQUIRE(dist.getMonth() == 3);
+    REQUIRE(dist.getDay() == 0);
+}
+
+TEST_CASE("TimeOfDay::distanceTo")
+{
+    TimeOfDay td1(10, 23, 40);
+    TimeOfDay td2(12, 18, 23);
+
+    TimeOfDay dist = td1.distanceTo(td2);
+    REQUIRE(dist.getHour() == 2);
+    REQUIRE(dist.getMinutes() == -5);
+    REQUIRE(dist.getSeconds() == -17);
 }
 
 TEST_CASE("DateTime::distanceTo")
 {
-    DateTime dt1(1);
-    DateTime dt2(2);
+    DateTime dt1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));
+    DateTime dt2(Date(2018, 01, 03), TimeOfDay(12, 0, 0));
+
 
     DateTime dist = dt1.distanceTo(dt2);
-    REQUIRE(dist.getReference() == -1.0);
+    REQUIRE(dist.getDate().getYear() == 0);
+    REQUIRE(dist.getDate().getMonth() == 0);
+    REQUIRE(dist.getDate().getDay() == 2);
+    REQUIRE(dist.getTimeOfDay().getHour() == 2);
+    REQUIRE(dist.getTimeOfDay().getMinutes() == 0);
+    REQUIRE(dist.getTimeOfDay().getSeconds() == 0);
 }
 
 TEST_CASE("DateTime::IsSameDayAs")
@@ -29,19 +61,25 @@ TEST_CASE("DateTime::IsSameDayAs")
 TEST_CASE("GeneralWorkPeriod getDuration")
 {
     GeneralWorkPeriod wp;
-    wp.setStart(DateTime(1));
-    wp.setEnd(DateTime(2));
+    wp.setStart(DateTime(Date(2018, 01, 01), TimeOfDay(10, 0, 0)));
+    wp.setEnd(DateTime(Date(2018, 01, 01), TimeOfDay(10, 10, 10)));
 
     DateTime d = wp.getDuration();
-    REQUIRE(d.getReference() == 1.0);
+    REQUIRE(d.getDate().equals(Date(0, 0, 0)));
+    REQUIRE(d.getTimeOfDay().getHour() == 0);
+    REQUIRE(d.getTimeOfDay().getMinutes() == 10);
+    REQUIRE(d.getTimeOfDay().getSeconds() == 10);
 }
 
 TEST_CASE("WorkDay::getWorkTime")
 {
     WorkDay d;
-    GeneralWorkPeriod p1(DateTime(1), DateTime(2));
+    GeneralWorkPeriod p1(DateTime(Date(2018, 01, 01), TimeOfDay(10, 00, 00)),
+                         DateTime(Date(2018, 01, 01), TimeOfDay(11, 00, 00)));
     d.addWorkPeriod(p1);
-    GeneralWorkPeriod p2(DateTime(1), DateTime(5));
+
+    GeneralWorkPeriod p2(DateTime(Date(2018, 01, 01), TimeOfDay(10, 00, 00)),
+                         DateTime(Date(2018, 01, 01), TimeOfDay(14, 00, 00)));
     d.addWorkPeriod(p2);
 
     REQUIRE(d.getWorkTime() == 5);

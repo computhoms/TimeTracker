@@ -16,6 +16,7 @@ public:
     static Date null();
 
     bool equals(Date d) const;
+    Date distanceTo(Date d) const;
 
     int getYear() const;
     int getMonth() const;

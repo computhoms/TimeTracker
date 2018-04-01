@@ -12,7 +12,7 @@ class DateTime
 {
 public:
     DateTime();
-    DateTime(double refValue);
+    DateTime(Date date, TimeOfDay timeOfDay);
     ~DateTime();
 
     static DateTime now();
@@ -21,10 +21,9 @@ public:
     TimeOfDay getTimeOfDay() const;
 
     DateTime distanceTo(DateTime a) const;
-    double getReference() const;
+//    double getReference() const;
 
 private:
-    time_t thisTime;
     Date _date;
     TimeOfDay _time;
 

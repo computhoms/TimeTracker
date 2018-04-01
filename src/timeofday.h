@@ -9,6 +9,14 @@ public:
     TimeOfDay(int hour, int minutes, int seconds);
     ~TimeOfDay();
 
+    TimeOfDay distanceTo(TimeOfDay t) const;
+
+    int getHour() const;
+    int getMinutes() const;
+    int getSeconds() const;
+
+    double getTotalHours() const;
+
 private:
     int _hour;
     int _minutes;

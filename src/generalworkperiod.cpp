@@ -1,15 +1,15 @@
 #include "generalworkperiod.h"
 
 GeneralWorkPeriod::GeneralWorkPeriod():
-    _start       (DateTime(0)),
-    _end         (DateTime(0))
+    _start       (DateTime(Date::null(), TimeOfDay(0, 0, 0))),
+    _end         (DateTime(Date::null(), TimeOfDay(0, 0, 0)))
 {
 
 }
 
 GeneralWorkPeriod::GeneralWorkPeriod(DateTime start):
     _start       (start),
-    _end         (DateTime(0))
+    _end         (DateTime(Date::null(), TimeOfDay(0, 0, 0)))
 {
 
 }
@@ -46,7 +46,7 @@ void GeneralWorkPeriod::setEnd(const DateTime &value)
 
 DateTime GeneralWorkPeriod::getDuration() const
 {
-    return _end.distanceTo(_start);
+    return _start.distanceTo(_end);
 }
 
 

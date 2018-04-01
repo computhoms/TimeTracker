@@ -5,7 +5,7 @@ Date::Date()
 {
     time_t t = time(NULL);
     struct tm lt = (*localtime(&t));
-    _year = lt.tm_year;
+    _year = lt.tm_year + 1900;
     _month = lt.tm_mon;
     _day = lt.tm_mday;
 }
@@ -42,6 +42,11 @@ Date Date::null()
 bool Date::equals(Date d) const
 {
     return _year == d.getYear() && _month == d.getMonth() && _day == d.getDay();
+}
+
+Date Date::distanceTo(Date d) const
+{
+    return Date(d.getYear() - _year, d.getMonth() - _month, d.getDay() - _day);
 }
 
 int Date::getYear() const
