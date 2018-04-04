@@ -2,6 +2,7 @@
 #define GENERALWORKPERIOD_H
 
 #include "datetime.h"
+#include "duration.h"
 
 /**
  * @brief The GeneralWorkPeriod class represents a working period with start and end time.
@@ -20,7 +21,7 @@ public:
     DateTime getEnd() const;
     void setEnd(const DateTime &value);
 
-    DateTime getDuration() const;
+    Duration getDuration() const;
 
 private:
     DateTime _start;

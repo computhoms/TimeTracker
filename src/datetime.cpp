@@ -1,7 +1,14 @@
 #include "datetime.h"
+#include "duration.h"
 
 
 DateTime::DateTime()
+{
+
+}
+
+DateTime::DateTime(Date date):
+    _date   (date)
 {
 
 }
@@ -18,7 +25,7 @@ DateTime::~DateTime()
 
 }
 
-DateTime DateTime::distanceTo(DateTime a) const
+Duration DateTime::distanceTo(DateTime a) const
 {
     Date d(a.getDate().year - _date.year,
            a.getDate().month - _date.month,
@@ -28,17 +35,7 @@ DateTime DateTime::distanceTo(DateTime a) const
                 a.getTimeOfDay().minutes - _time.minutes,
                 a.getTimeOfDay().seconds - _time.seconds);
 
-    return DateTime(d, t);
-}
-
-double DateTime::totalHours() const
-{
-    return 0.0;
-}
-
-double DateTime::getTotalHoursOf(TimeOfDay t)
-{
-    return t.hours + (t.minutes / 60.0) + (t.seconds / 3600.0);
+    return Duration(d, t);
 }
 
 DateTime DateTime::now()

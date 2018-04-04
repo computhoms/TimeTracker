@@ -9,13 +9,9 @@ TEST_CASE("DateTime::distanceTo")
     DateTime dt2(Date(2018, 01, 03), TimeOfDay(12, 0, 0));
 
 
-    DateTime dist = dt1.distanceTo(dt2);
-    REQUIRE(dist.getDate().year == 0);
-    REQUIRE(dist.getDate().month == 0);
-    REQUIRE(dist.getDate().dayOfMonth == 2);
-    REQUIRE(dist.getTimeOfDay().hours == 2);
-    REQUIRE(dist.getTimeOfDay().minutes == 0);
-    REQUIRE(dist.getTimeOfDay().seconds == 0);
+    Duration dist = dt1.distanceTo(dt2);
+    REQUIRE(dist.getDays() == 2);
+    REQUIRE(dist.getHours() == 2);
 }
 
 TEST_CASE("DateTime::IsSameDayAs")
@@ -39,12 +35,12 @@ TEST_CASE("GeneralWorkPeriod getDuration")
     wp.setStart(DateTime(Date(2018, 01, 01), TimeOfDay(10, 0, 0)));
     wp.setEnd(DateTime(Date(2018, 01, 01), TimeOfDay(10, 10, 10)));
 
-    DateTime d = wp.getDuration();
-    REQUIRE(d.isSameDayAs(DateTime()));
+    Duration d = wp.getDuration();
+    REQUIRE(d.getTotalHours() == ((10/60.0) + (10 / 3600.0)));
 
-    REQUIRE(d.getTimeOfDay().hours == 0);
-    REQUIRE(d.getTimeOfDay().minutes == 10);
-    REQUIRE(d.getTimeOfDay().seconds == 10);
+    REQUIRE(d.getHours() == 0);
+    REQUIRE(d.getMinutes() == 10);
+    REQUIRE(d.getSeconds() == 10);
 }
 
 TEST_CASE("WorkDay::getWorkTime")
@@ -103,6 +99,38 @@ TEST_CASE("TimeTracker::getWorkingDurationOfToday")
     tt.addWorkDay(wd);
 
     REQUIRE(tt.getWorkingDurationOfToday().getTimeOfDay().hours == 2);
+}
+
+TEST_CASE("TimeTracker::getTimeDurationBetween")
+{
+    GeneralWorkPeriod wd1(DateTime(Date(2018, 1, 1), TimeOfDay(10, 0, 0)),
+                DateTime(Date(2018, 1, 1), TimeOfDay(12, 0, 0)));
+    GeneralWorkPeriod wd2(DateTime(Date(2018, 1, 2), TimeOfDay(10, 0, 0)),
+                DateTime(Date(2018, 1, 2), TimeOfDay(13, 0, 0)));
+    GeneralWorkPeriod wd3(DateTime(Date(2018, 1, 3), TimeOfDay(10, 0, 0)),
+                DateTime(Date(2018, 1, 3), TimeOfDay(14, 0, 0)));
+    GeneralWorkPeriod wd4(DateTime(Date(2018, 1, 4), TimeOfDay(10, 0, 0)),
+                DateTime(Date(2018, 1, 4), TimeOfDay(15, 0, 0)));
+
+    WorkDay w1(Date(2018, 1, 1));
+    WorkDay w2(Date(2018, 1, 2));
+    WorkDay w3(Date(2018, 1, 3));
+    WorkDay w4(Date(2018, 1, 4));
+    w1.addWorkPeriod(wd1);
+    w2.addWorkPeriod(wd2);
+    w3.addWorkPeriod(wd3);
+    w4.addWorkPeriod(wd4);
+
+    TimeTracker tt;
+    tt.addWorkDay(w1);
+    tt.addWorkDay(w2);
+    tt.addWorkDay(w3);
+    tt.addWorkDay(w4);
+
+    REQUIRE(tt.getWorkingDurationBetween(DateTime(Date(2018, 1, 2)),
+                                         DateTime(Date(2018, 1, 3)))
+              .getTimeOfDay().hours == 7);
+
 }
 
 // TODO

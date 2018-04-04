@@ -44,7 +44,7 @@ void GeneralWorkPeriod::setEnd(const DateTime &value)
     _end = value;
 }
 
-DateTime GeneralWorkPeriod::getDuration() const
+Duration GeneralWorkPeriod::getDuration() const
 {
     return _start.distanceTo(_end);
 }

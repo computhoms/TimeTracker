@@ -1,4 +1,5 @@
 #include "timetracker.h"
+#include "duration.h"
 
 TimeTracker::TimeTracker()
 {

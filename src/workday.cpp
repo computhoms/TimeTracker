@@ -29,8 +29,8 @@ double WorkDay::getWorkTime() const
     double totalWorkTime(0);
     for (size_t i(0); i < workPeriods.size(); ++i)
     {
-        DateTime duration = workPeriods[i].getDuration();
-        double durationInHours = DateTime::getTotalHoursOf(duration.getTimeOfDay());
+        Duration duration = workPeriods[i].getDuration();
+        double durationInHours = duration.getTotalHours();
         // TODO get duraiton days
         totalWorkTime += durationInHours;
     }

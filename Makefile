@@ -18,7 +18,7 @@ all:
 #%.o: %.cpp
 #	$(CC) -c $(CFLAGS) $< -o $@
 
-tests: bin/tests.o bin/datetime.o bin/generalworkperiod.o bin/journalentry.o bin/workday.o bin/timetracker.o
+tests: bin/tests.o bin/datetime.o bin/generalworkperiod.o bin/journalentry.o bin/workday.o bin/timetracker.o bin/duration.o
 	$(CC) -std=c++11 -o bin/tests $^ $(LDFLAGS)
 
 # Construct object files from src cpp files

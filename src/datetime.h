@@ -51,6 +51,8 @@ struct TimeOfDay
     int seconds;
 };
 
+class Duration;
+
 /**
  * @brief The DateTime class represents either a given moment in time or a time duration.
  */
@@ -58,6 +60,7 @@ class DateTime
 {
 public:
     DateTime();
+    DateTime(Date date);
     DateTime(Date date, TimeOfDay timeOfDay);
     ~DateTime();
 
@@ -71,10 +74,7 @@ public:
     Date getDate() const;
     TimeOfDay getTimeOfDay() const;
 
-    DateTime distanceTo(DateTime a) const;
-
-    double totalHours() const;
-    static double getTotalHoursOf(TimeOfDay t);
+    Duration distanceTo(DateTime a) const;
 
 private:
     Date _date;
