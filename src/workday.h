@@ -20,13 +20,14 @@ public:
     double getWorkTime() const;
 
     void addWorkPeriod(GeneralWorkPeriod p);
+    void addJournalEntry(JournalEntry entry);
 
     DateTime getTime() const;
     GeneralWorkPeriod *getCurrentWorkPeriod() const;
 
 private:
-    std::vector<GeneralWorkPeriod> workPeriods;
-    std::vector<JournalEntry> journalEntries;
+    std::vector<GeneralWorkPeriod> _workPeriods;
+    std::vector<JournalEntry> _journalEntries;
     Date _day;
 
     GeneralWorkPeriod *_currentWorkPeriod;

@@ -1,6 +1,7 @@
 #include "journalentry.h"
 
-JournalEntry::JournalEntry()
+JournalEntry::JournalEntry(std::string value):
+    _value  (value)
 {
 
 }

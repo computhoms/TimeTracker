@@ -23,7 +23,7 @@ public:
     WorkDay getWorkDay(Date day) const;
 
 private:
-    std::vector<WorkDay> workDays;
+    std::vector<WorkDay> _workDays;
 };
 
 #endif // TIMETRACKER_H

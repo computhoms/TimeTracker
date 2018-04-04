@@ -17,7 +17,7 @@ void TimeTracker::startWorking()
     if (existing.isNull())
     {
         existing = WorkDay(DateTime::today().getDate());
-        workDays.push_back(existing);
+        _workDays.push_back(existing);
     }
     existing.addWorkPeriod(GeneralWorkPeriod(DateTime::now()));
 }
@@ -33,7 +33,7 @@ void TimeTracker::stopWorking()
 
 void TimeTracker::addWorkDay(WorkDay wd)
 {
-    workDays.push_back(wd);
+    _workDays.push_back(wd);
 }
 
 DateTime TimeTracker::getWorkingDurationOfToday() const
@@ -49,9 +49,9 @@ DateTime TimeTracker::getWorkingDurationOfToday() const
 DateTime TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) const
 {
     double workDimeAsHours = 0;
-    for (size_t i(0); i < workDays.size(); ++i)
+    for (size_t i(0); i < _workDays.size(); ++i)
     {
-        WorkDay d = workDays[i];
+        WorkDay d = _workDays[i];
         if (d.getTime() >= from && d.getTime() <= to)
             workDimeAsHours += d.getWorkTime();
     }
@@ -60,9 +60,9 @@ DateTime TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) cons
 
 WorkDay TimeTracker::getWorkDay(Date day) const
 {
-    for (size_t i(0); i < workDays.size(); ++i)
-        if (workDays[i].getTime().isSameDayAs(DateTime(day, TimeOfDay())))
-            return workDays[i];
+    for (size_t i(0); i < _workDays.size(); ++i)
+        if (_workDays[i].getTime().isSameDayAs(DateTime(day, TimeOfDay())))
+            return _workDays[i];
     return WorkDay(Date(0, 0, 0));
 }
 

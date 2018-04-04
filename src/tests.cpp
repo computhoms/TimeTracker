@@ -134,5 +134,4 @@ TEST_CASE("TimeTracker::getTimeDurationBetween")
 }
 
 // TODO
-// - Refactor dates to add a "Duration" class?
 // - Finish implementing TimeTracker class
