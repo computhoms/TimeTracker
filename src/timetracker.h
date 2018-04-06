@@ -17,8 +17,8 @@ public:
     void stopWorking();
     void addWorkDay(WorkDay wd);
 
-    DateTime getWorkingDurationOfToday() const;
-    DateTime getWorkingDurationBetween(DateTime from, DateTime to) const;
+    Duration getWorkingDurationOfToday() const;
+    Duration getWorkingDurationBetween(DateTime from, DateTime to) const;
 
     WorkDay getWorkDay(Date day) const;
 

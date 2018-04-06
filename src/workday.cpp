@@ -24,16 +24,12 @@ bool WorkDay::isNull()
     return DateTime::areDatesEqual(_day, Date());
 }
 
-double WorkDay::getWorkTime() const
+Duration WorkDay::getWorkTime() const
 {
-    double totalWorkTime(0);
+    Duration totalWorkTime;
     for (size_t i(0); i < _workPeriods.size(); ++i)
-    {
-        Duration duration = _workPeriods[i].getDuration();
-        double durationInHours = duration.getTotalHours();
-        // TODO get duraiton days
-        totalWorkTime += durationInHours;
-    }
+        totalWorkTime += _workPeriods[i].getDuration();
+
     return totalWorkTime;
 }
 

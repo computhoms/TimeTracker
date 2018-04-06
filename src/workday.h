@@ -17,7 +17,7 @@ public:
 
     bool isNull();
 
-    double getWorkTime() const;
+    Duration getWorkTime() const;
 
     void addWorkPeriod(GeneralWorkPeriod p);
     void addJournalEntry(JournalEntry entry);

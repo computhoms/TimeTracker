@@ -76,11 +76,10 @@ public:
 
     Duration distanceTo(DateTime a) const;
 
+    time_t toLocalTime() const;
 private:
     Date _date;
     TimeOfDay _time;
-
-    time_t createLocalTime(double reference) const;
 };
 
 bool operator<(DateTime const &d1, DateTime const &d2);

@@ -3,15 +3,51 @@
 #include "workday.h"
 #include "timetracker.h"
 
+TEST_CASE("Duration::operator/")
+{
+    Duration d(0, TimeOfDay(10, 0, 0));
+    REQUIRE((d/10).getTotalHours() == 1.0);
+}
+
+TEST_CASE("Duration::operator*")
+{
+    Duration d(0, TimeOfDay(10, 0, 0));
+    REQUIRE((d*10).getTotalHours() == 100.0);
+}
+
+TEST_CASE("Duration::operator+")
+{
+    Duration d1(0, TimeOfDay(10, 0, 0));
+    Duration d2(0, TimeOfDay(5, 0, 0));
+    REQUIRE((d1 + d2).getTotalHours() == 15.0);
+}
+
+TEST_CASE("Duration::operator+=")
+{
+    Duration d1(0, TimeOfDay(10, 0, 0));
+    Duration d2(0, TimeOfDay(5, 0, 0));
+    d1 += d2;
+    REQUIRE(d1.getTotalHours() == 15.0);
+}
+
+TEST_CASE("Duration::operator-")
+{
+    Duration d1(0, TimeOfDay(10, 0, 0));
+    Duration d2(0, TimeOfDay(5, 0, 0));
+    REQUIRE((d1 - d2).getTotalHours() == 5.0);
+}
+
 TEST_CASE("DateTime::distanceTo")
 {
     DateTime dt1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));
-    DateTime dt2(Date(2018, 01, 03), TimeOfDay(12, 0, 0));
+    DateTime dt2(Date(2018, 01, 03), TimeOfDay(12, 3, 12));
 
 
     Duration dist = dt1.distanceTo(dt2);
     REQUIRE(dist.getDays() == 2);
     REQUIRE(dist.getHours() == 2);
+    REQUIRE(dist.getMinutes() == 3);
+    REQUIRE(dist.getSeconds() == 12);
 }
 
 TEST_CASE("DateTime::IsSameDayAs")
@@ -54,7 +90,7 @@ TEST_CASE("WorkDay::getWorkTime")
                          DateTime(Date(2018, 01, 01), TimeOfDay(14, 00, 00)));
     d.addWorkPeriod(p2);
 
-    REQUIRE(d.getWorkTime() == 5);
+    REQUIRE(d.getWorkTime().getTotalHours() == 5);
 }
 
 TEST_CASE("TimeTracker::getWorkDay returns 'Null' workday if nothing exists")
@@ -98,7 +134,7 @@ TEST_CASE("TimeTracker::getWorkingDurationOfToday")
                          DateTime(Date(2018, 1, 1), TimeOfDay(12, 0, 0))));
     tt.addWorkDay(wd);
 
-    REQUIRE(tt.getWorkingDurationOfToday().getTimeOfDay().hours == 2);
+    REQUIRE(tt.getWorkingDurationOfToday().getTotalHours() == 2);
 }
 
 TEST_CASE("TimeTracker::getTimeDurationBetween")
@@ -129,9 +165,6 @@ TEST_CASE("TimeTracker::getTimeDurationBetween")
 
     REQUIRE(tt.getWorkingDurationBetween(DateTime(Date(2018, 1, 2)),
                                          DateTime(Date(2018, 1, 3)))
-              .getTimeOfDay().hours == 7);
+              .getTotalHours() == 7);
 
 }
-
-// TODO
-// - Finish implementing TimeTracker class

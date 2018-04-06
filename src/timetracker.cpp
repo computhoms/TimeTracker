@@ -36,26 +36,25 @@ void TimeTracker::addWorkDay(WorkDay wd)
     _workDays.push_back(wd);
 }
 
-DateTime TimeTracker::getWorkingDurationOfToday() const
+Duration TimeTracker::getWorkingDurationOfToday() const
 {
     WorkDay existing = getWorkDay(DateTime::today().getDate());
     if (!existing.isNull())
-    {
-        return DateTime(Date(), TimeOfDay(existing.getWorkTime(), 0, 0));
-    }
-    return DateTime(Date(0, 0, 0), TimeOfDay(0, 0, 0));
+        return existing.getWorkTime();
+
+    return Duration();
 }
 
-DateTime TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) const
+Duration TimeTracker::getWorkingDurationBetween(DateTime from, DateTime to) const
 {
-    double workDimeAsHours = 0;
+    Duration workDuration;
     for (size_t i(0); i < _workDays.size(); ++i)
     {
         WorkDay d = _workDays[i];
         if (d.getTime() >= from && d.getTime() <= to)
-            workDimeAsHours += d.getWorkTime();
+            workDuration += d.getWorkTime();
     }
-    return DateTime(Date(), TimeOfDay(workDimeAsHours, 0, 0));
+    return workDuration;
 }
 
 WorkDay TimeTracker::getWorkDay(Date day) const

@@ -1,5 +1,6 @@
 #include "datetime.h"
 #include "duration.h"
+#include <cmath>
 
 
 DateTime::DateTime()
@@ -27,21 +28,40 @@ DateTime::~DateTime()
 
 Duration DateTime::distanceTo(DateTime a) const
 {
-    Date d(a.getDate().year - _date.year,
-           a.getDate().month - _date.month,
-           a.getDate().dayOfMonth - _date.dayOfMonth);
+    double diffSeconds = getDiffTime(*this, a);
+    int days = std::floor(diffSeconds / (3600.0 * 24.0));
+    int daysInSeconds = days * 24.0 * 3600.0;
+    int hours = std::floor((diffSeconds - daysInSeconds) / 3600.0);
+    int hoursInSeconds = hours * 3600.0;
+    int minutes = std::floor((diffSeconds - daysInSeconds - hoursInSeconds) / 60.0);
+    int minutesInSeconds = minutes * 60.0;
+    int seconds = std::floor(diffSeconds - daysInSeconds - hoursInSeconds - minutesInSeconds);
 
-    TimeOfDay t(a.getTimeOfDay().hours - _time.hours,
-                a.getTimeOfDay().minutes - _time.minutes,
-                a.getTimeOfDay().seconds - _time.seconds);
+    TimeOfDay t(hours, minutes, seconds);
+    return Duration(days, t);
+}
 
-    return Duration(d, t);
+time_t DateTime::toLocalTime() const
+{
+    struct tm dtm1;
+    dtm1.tm_year = _date.year - 1900;
+    dtm1.tm_mon = _date.month;
+    dtm1.tm_mday = _date.dayOfMonth;
+    dtm1.tm_hour = _time.hours;
+    dtm1.tm_min = _time.minutes;
+    dtm1.tm_sec = _time.seconds;
+    dtm1.tm_wday = 0;
+    dtm1.tm_yday = 0;
+    dtm1.tm_isdst = -1;
+
+    return mktime(&dtm1);
 }
 
 DateTime DateTime::now()
 {
     time_t ttime = time(NULL);
     struct tm lt = (*localtime(&ttime));
+
     Date d;
     d.year = lt.tm_year + 1900;
     d.month = lt.tm_mon;
@@ -97,24 +117,8 @@ bool operator<=(const DateTime &d1, const DateTime &d2)
 
 double getDiffTime(const DateTime &d1, const DateTime &d2)
 {
-    struct tm dtm1 = {0};
-    dtm1.tm_year = d1.getDate().year - 1900;
-    dtm1.tm_mon = d1.getDate().month;
-    dtm1.tm_mday = d1.getDate().dayOfMonth;
-    dtm1.tm_hour = d1.getTimeOfDay().hours;
-    dtm1.tm_min = d1.getTimeOfDay().minutes;
-    dtm1.tm_sec = d1.getTimeOfDay().seconds;
-
-    struct tm dtm2 = {0};
-    dtm2.tm_year = d2.getDate().year - 1900;
-    dtm2.tm_mon = d2.getDate().month;
-    dtm2.tm_mday = d2.getDate().dayOfMonth;
-    dtm2.tm_hour = d2.getTimeOfDay().hours;
-    dtm2.tm_min = d2.getTimeOfDay().minutes;
-    dtm2.tm_sec = d2.getTimeOfDay().seconds;
-
-    time_t t1 = mktime(&dtm1);
-    time_t t2 = mktime(&dtm2);
+    time_t t1 = d1.toLocalTime();
+    time_t t2 = d2.toLocalTime();
     return difftime(t2, t1);
 }
 
