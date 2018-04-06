@@ -37,6 +37,17 @@ TEST_CASE("Duration::operator-")
     REQUIRE((d1 - d2).getTotalHours() == 5.0);
 }
 
+TEST_CASE("Duration::rearrange")
+{
+    int seconds = 12 + 2 * 60.0 + 1 * 3600.0 + 3 * 24 * 3600.0;
+    Duration d(0, TimeOfDay(0, 0, seconds));
+    d.rearange();
+    REQUIRE(d.getDays() == 3);
+    REQUIRE(d.getHours() == 1);
+    REQUIRE(d.getMinutes() == 2);
+    REQUIRE(d.getSeconds() == 12);
+}
+
 TEST_CASE("DateTime::distanceTo")
 {
     DateTime dt1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));

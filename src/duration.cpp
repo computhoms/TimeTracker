@@ -51,11 +51,23 @@ double Duration::getTotalHours() const
  */
 void Duration::rearange()
 {
-    double hours = getTotalHours();
-    _days = std::floor(hours / 24);
-    _time.hours = std::floor((hours - _days * 24));
-    _time.minutes = std::floor((hours - _days * 24 - _time.hours) * 60);
-    _time.seconds = std::floor((hours - _days * 24 - _time.hours - _time.minutes * 60) * 3600);
+    double totalSeconds = getTotalHours() * 3600.0;
+    double oneMinuteInSeconds = 60.0;
+    double oneHourInSeconds = 60.0 * oneMinuteInSeconds;
+    double oneDayInSeconds = 24.0 * oneHourInSeconds;
+
+
+    _days = std::floor(totalSeconds / oneDayInSeconds);
+    int daysInSeconds = _days * oneDayInSeconds;
+
+    _time.hours = std::floor((totalSeconds - daysInSeconds) / oneHourInSeconds);
+    int hoursInSeconds = _time.hours * oneHourInSeconds;
+
+    _time.minutes = std::floor((totalSeconds - daysInSeconds - hoursInSeconds) / oneMinuteInSeconds);
+    int minutesInSeconds = _time.minutes * oneMinuteInSeconds;
+
+    _time.seconds = std::floor(
+                (totalSeconds - daysInSeconds - hoursInSeconds - minutesInSeconds));
 }
 
 Duration &Duration::operator+=(const Duration &dur)

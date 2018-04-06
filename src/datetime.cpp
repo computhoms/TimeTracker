@@ -1,6 +1,5 @@
 #include "datetime.h"
 #include "duration.h"
-#include <cmath>
 
 
 DateTime::DateTime()
@@ -28,17 +27,10 @@ DateTime::~DateTime()
 
 Duration DateTime::distanceTo(DateTime a) const
 {
-    double diffSeconds = getDiffTime(*this, a);
-    int days = std::floor(diffSeconds / (3600.0 * 24.0));
-    int daysInSeconds = days * 24.0 * 3600.0;
-    int hours = std::floor((diffSeconds - daysInSeconds) / 3600.0);
-    int hoursInSeconds = hours * 3600.0;
-    int minutes = std::floor((diffSeconds - daysInSeconds - hoursInSeconds) / 60.0);
-    int minutesInSeconds = minutes * 60.0;
-    int seconds = std::floor(diffSeconds - daysInSeconds - hoursInSeconds - minutesInSeconds);
-
-    TimeOfDay t(hours, minutes, seconds);
-    return Duration(days, t);
+    TimeOfDay t(0, 0, diffSeconds);
+    Duration dur(0, t);
+    dur.rearange();
+    return dur;
 }
 
 time_t DateTime::toLocalTime() const
