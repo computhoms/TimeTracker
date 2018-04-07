@@ -50,6 +50,19 @@ TEST_CASE("Duration::rearrange")
     REQUIRE(d.getSeconds() == 12);
 }
 
+TEST_CASE("Duration::getTotalHours")
+{
+    Duration d(1, TimeOfDay(2, 7, 2));
+    REQUIRE(d.getTotalHours() == 24 + 2 + (7.0 / 60.0) + (2.0 / 3600.0));
+
+    Duration d2(0, TimeOfDay(0, 10, 10));
+    REQUIRE(d2.getDays() == 0);
+    REQUIRE(d2.getHours() == 0);
+    REQUIRE(d2.getMinutes() == 10);
+    REQUIRE(d2.getSeconds() == 10);
+    REQUIRE(d2.getTotalHours() == (10.0 / 60.0) + (10.0 / 3600.0));
+}
+
 TEST_CASE("getDiffTime")
 {
     DateTime d1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));
@@ -90,26 +103,27 @@ TEST_CASE("DateTime::operator<")
 TEST_CASE("GeneralWorkPeriod getDuration")
 {
     GeneralWorkPeriod wp;
-    wp.setStart(DateTime(Date(2018, 01, 01), TimeOfDay(10, 0, 0)));
-    wp.setEnd(DateTime(Date(2018, 01, 01), TimeOfDay(10, 10, 10)));
+    wp.setStart(TimeOfDay(10, 0, 0));
+    wp.setEnd(TimeOfDay(10, 10, 10));
 
     Duration d = wp.getDuration();
-    REQUIRE(d.getTotalHours() == ((10/60.0) + (10 / 3600.0)));
-
+    REQUIRE(d.getDays() == 0);
     REQUIRE(d.getHours() == 0);
     REQUIRE(d.getMinutes() == 10);
     REQUIRE(d.getSeconds() == 10);
+
+    REQUIRE(d.getTotalHours() == ((10.0 / 60.0) + (10.0 / 3600.0)));
 }
 
 TEST_CASE("WorkDay::getWorkTime")
 {
     WorkDay d;
-    GeneralWorkPeriod p1(DateTime(Date(2018, 01, 01), TimeOfDay(10, 00, 00)),
-                         DateTime(Date(2018, 01, 01), TimeOfDay(11, 00, 00)));
+    GeneralWorkPeriod p1(TimeOfDay(10, 00, 00),
+                         TimeOfDay(11, 00, 00));
     d.addWorkPeriod(p1);
 
-    GeneralWorkPeriod p2(DateTime(Date(2018, 01, 01), TimeOfDay(10, 00, 00)),
-                         DateTime(Date(2018, 01, 01), TimeOfDay(14, 00, 00)));
+    GeneralWorkPeriod p2(TimeOfDay(10, 00, 00),
+                         TimeOfDay(14, 00, 00));
     d.addWorkPeriod(p2);
 
     REQUIRE(d.getWorkTime().getTotalHours() == 5);
@@ -152,8 +166,8 @@ TEST_CASE("TimeTracker::getWorkingDurationOfToday")
     TimeTracker tt;
     WorkDay wd(DateTime::today().getDate());
     wd.addWorkPeriod(GeneralWorkPeriod(
-                         DateTime(Date(2018, 1, 1), TimeOfDay(10, 0, 0)),
-                         DateTime(Date(2018, 1, 1), TimeOfDay(12, 0, 0))));
+                         TimeOfDay(10, 0, 0),
+                         TimeOfDay(12, 0, 0)));
     tt.addWorkDay(wd);
 
     REQUIRE(tt.getWorkingDurationOfToday().getTotalHours() == 2);
@@ -161,14 +175,14 @@ TEST_CASE("TimeTracker::getWorkingDurationOfToday")
 
 TEST_CASE("TimeTracker::getTimeDurationBetween")
 {
-    GeneralWorkPeriod wd1(DateTime(Date(2018, 1, 1), TimeOfDay(10, 0, 0)),
-                DateTime(Date(2018, 1, 1), TimeOfDay(12, 0, 0)));
-    GeneralWorkPeriod wd2(DateTime(Date(2018, 1, 2), TimeOfDay(10, 0, 0)),
-                DateTime(Date(2018, 1, 2), TimeOfDay(13, 0, 0)));
-    GeneralWorkPeriod wd3(DateTime(Date(2018, 1, 3), TimeOfDay(10, 0, 0)),
-                DateTime(Date(2018, 1, 3), TimeOfDay(14, 0, 0)));
-    GeneralWorkPeriod wd4(DateTime(Date(2018, 1, 4), TimeOfDay(10, 0, 0)),
-                DateTime(Date(2018, 1, 4), TimeOfDay(15, 0, 0)));
+    GeneralWorkPeriod wd1(TimeOfDay(10, 0, 0),
+                TimeOfDay(12, 0, 0));
+    GeneralWorkPeriod wd2(TimeOfDay(10, 0, 0),
+                TimeOfDay(13, 0, 0));
+    GeneralWorkPeriod wd3(TimeOfDay(10, 0, 0),
+                TimeOfDay(14, 0, 0));
+    GeneralWorkPeriod wd4(TimeOfDay(10, 0, 0),
+                TimeOfDay(15, 0, 0));
 
     WorkDay w1(Date(2018, 1, 1));
     WorkDay w2(Date(2018, 1, 2));
@@ -191,20 +205,22 @@ TEST_CASE("TimeTracker::getTimeDurationBetween")
 
 }
 
-TEST_CASE("TimePlanner::getRemainingTimeForWeek")
-{
-    TimePlanner pl(Duration(0, TimeOfDay(42, 0, 0)));
-    Duration worked(0, TimeOfDay(18, 0, 0));
-    REQUIRE(pl.getRemainingTimeForWeek(worked).getSeconds() == 0.0);
-    REQUIRE(pl.getRemainingTimeForWeek(worked).getMinutes() == 0.0);
-    REQUIRE(pl.getRemainingTimeForWeek(worked).getHours() == 0.0);
-    REQUIRE(pl.getRemainingTimeForWeek(worked).getDays() == 1.0);
-    REQUIRE(pl.getRemainingTimeForWeek(worked).getTotalHours() == 24.0);
-}
-
 TEST_CASE("TimePlanner::getTotalExtraTime")
 {
     TimePlanner pl(Duration(0, TimeOfDay(42, 0, 0)));
     Duration worked(0, TimeOfDay(45, 0, 0));
-    REQUIRE(pl.getTotalExtraTime(worked, 5).getHours() == 3.0);
+    REQUIRE(pl.getExtraTime(worked, 5).getHours() == 3.0);
 }
+
+TEST_CASE("WorkDayCollectionWriter::writeToString")
+{
+    std::vector<WorkDay> days;
+    WorkDay d1(Date(2018, 1, 1));
+    d1.addWorkPeriod(GeneralWorkPeriod(TimeOfDay(10, 0, 0),
+                                       TimeOfDay(12, 0, 0)));
+}
+
+
+
+
+
