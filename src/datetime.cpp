@@ -1,5 +1,6 @@
 #include "datetime.h"
 #include "duration.h"
+#include <iostream>
 
 
 DateTime::DateTime()
@@ -27,6 +28,7 @@ DateTime::~DateTime()
 
 Duration DateTime::distanceTo(DateTime a) const
 {
+    double diffSeconds = getDiffTime(*this, a);
     TimeOfDay t(0, 0, diffSeconds);
     Duration dur(0, t);
     dur.rearange();
@@ -36,7 +38,7 @@ Duration DateTime::distanceTo(DateTime a) const
 time_t DateTime::toLocalTime() const
 {
     struct tm dtm1;
-    dtm1.tm_year = _date.year - 1900;
+    dtm1.tm_year = _date.year == 0 ? 0 : _date.year - 1900;
     dtm1.tm_mon = _date.month;
     dtm1.tm_mday = _date.dayOfMonth;
     dtm1.tm_hour = _time.hours;

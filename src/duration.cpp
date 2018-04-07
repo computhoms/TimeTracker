@@ -11,7 +11,7 @@ Duration::Duration(int days, TimeOfDay t):
     _time   (t),
     _days   (days)
 {
-
+    rearange();
 }
 
 Duration::~Duration()
@@ -51,10 +51,10 @@ double Duration::getTotalHours() const
  */
 void Duration::rearange()
 {
-    double totalSeconds = getTotalHours() * 3600.0;
-    double oneMinuteInSeconds = 60.0;
-    double oneHourInSeconds = 60.0 * oneMinuteInSeconds;
-    double oneDayInSeconds = 24.0 * oneHourInSeconds;
+    double totalSeconds = getTotalSeconds();
+    double oneMinuteInSeconds = 60;
+    double oneHourInSeconds = 60 * oneMinuteInSeconds;
+    double oneDayInSeconds = 24 * oneHourInSeconds;
 
 
     _days = std::floor(totalSeconds / oneDayInSeconds);
@@ -67,7 +67,7 @@ void Duration::rearange()
     int minutesInSeconds = _time.minutes * oneMinuteInSeconds;
 
     _time.seconds = std::floor(
-                (totalSeconds - daysInSeconds - hoursInSeconds - minutesInSeconds));
+                totalSeconds - daysInSeconds - hoursInSeconds - minutesInSeconds);
 }
 
 Duration &Duration::operator+=(const Duration &dur)
@@ -76,41 +76,40 @@ Duration &Duration::operator+=(const Duration &dur)
     return *this;
 }
 
+double Duration::getTotalSeconds() const
+{
+    return _days * 24 * 3600.0 + _time.hours * 3600.0 + _time.minutes * 60.0 + _time.seconds;
+}
+
 
 
 Duration operator/(const Duration &dur, const double &divid)
 {
-    double totalHours = dur.getTotalHours();
-    totalHours /= divid;
-    Duration d(0, TimeOfDay(totalHours, 0, 0));
-    d.rearange();
-    return d;
+    return createDurationFromSeconds(dur.getTotalSeconds() / divid);
 }
 
 
 Duration operator*(const Duration &dur, const double &mul)
 {
-    double totalHours = dur.getTotalHours();
-    totalHours *= mul;
-    Duration d(0, TimeOfDay(totalHours, 0, 0));
-    d.rearange();
-    return d;
+    return createDurationFromSeconds(dur.getTotalSeconds() * mul);
 }
 
 
 Duration operator+(const Duration &dur1, const Duration &dur2)
 {
-    double totalHours = dur1.getTotalHours() + dur2.getTotalHours();
-    Duration d(0, TimeOfDay(totalHours, 0, 0));
-    d.rearange();
-    return d;
+    return createDurationFromSeconds(dur1.getTotalSeconds() + dur2.getTotalSeconds());
 }
 
 
 Duration operator-(const Duration &dur1, const Duration &dur2)
 {
-    double totalHours = dur1.getTotalHours() - dur2.getTotalHours();
-    Duration d(0, TimeOfDay(totalHours, 0, 0));
+    return createDurationFromSeconds(dur1.getTotalSeconds() - dur2.getTotalSeconds());
+}
+
+
+Duration createDurationFromSeconds(int seconds)
+{
+    Duration d(0, TimeOfDay(0, 0, seconds));
     d.rearange();
     return d;
 }

@@ -19,6 +19,7 @@ public:
     int getSeconds() const;
 
     double getTotalHours() const;
+    double getTotalSeconds() const;
 
     void rearange();
 
@@ -27,11 +28,14 @@ public:
 private:
     TimeOfDay _time;
     int _days;
+
 };
 
 Duration operator/(Duration const &dur, double const &divid);
 Duration operator*(Duration const &dur, double const &divid);
 Duration operator+(Duration const &dur1, Duration const &dur2);
 Duration operator-(Duration const &dur1, Duration const &dur2);
+
+Duration createDurationFromSeconds(int seconds);
 
 #endif // DURATION_H
