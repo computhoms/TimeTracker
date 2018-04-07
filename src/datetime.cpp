@@ -1,6 +1,5 @@
 #include "datetime.h"
 #include "duration.h"
-#include <iostream>
 
 
 DateTime::DateTime()

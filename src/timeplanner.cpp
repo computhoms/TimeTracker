@@ -13,7 +13,7 @@ TimePlanner::~TimePlanner()
 
 Duration TimePlanner::getDailyWorkDuration() const
 {
-    return _weeklyWorkDuration / 5;
+    return _weeklyWorkDuration / 5.0;
 }
 
 Duration TimePlanner::getWeeklyWorkDuration() const
@@ -21,9 +21,8 @@ Duration TimePlanner::getWeeklyWorkDuration() const
     return _weeklyWorkDuration;
 }
 
-Duration TimePlanner::getRemainingTimeForWeek(Duration timeWorked) const
+Duration TimePlanner::getExtraTime(Duration timeWorked, int numberOfWorkingDays) const
 {
-    Duration weeklyDuration = getWeeklyWorkDuration();
-    return weeklyDuration - timeWorked;
+    return timeWorked - (getDailyWorkDuration() * numberOfWorkingDays);
 }
 

@@ -17,7 +17,7 @@ public:
     Duration getDailyWorkDuration() const;
     Duration getWeeklyWorkDuration() const;
 
-    Duration getRemainingTimeForWeek(Duration timeWorked) const;
+    Duration getExtraTime(Duration timeWorked, int numberOfWorkingDays) const;
 
 private:
     Duration _weeklyWorkDuration;

@@ -201,3 +201,10 @@ TEST_CASE("TimePlanner::getRemainingTimeForWeek")
     REQUIRE(pl.getRemainingTimeForWeek(worked).getDays() == 1.0);
     REQUIRE(pl.getRemainingTimeForWeek(worked).getTotalHours() == 24.0);
 }
+
+TEST_CASE("TimePlanner::getTotalExtraTime")
+{
+    TimePlanner pl(Duration(0, TimeOfDay(42, 0, 0)));
+    Duration worked(0, TimeOfDay(45, 0, 0));
+    REQUIRE(pl.getTotalExtraTime(worked, 5).getHours() == 3.0);
+}

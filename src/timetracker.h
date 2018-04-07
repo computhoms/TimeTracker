@@ -15,7 +15,9 @@ public:
 
     void startWorking();
     void stopWorking();
+
     void addWorkDay(WorkDay wd);
+    bool replaceWorkDay(WorkDay wd, Date d);
 
     Duration getWorkingDurationOfToday() const;
     Duration getWorkingDurationBetween(DateTime from, DateTime to) const;
@@ -24,6 +26,8 @@ public:
 
 private:
     std::vector<WorkDay> _workDays;
+
+    size_t getWorkDayIndex(Date day) const;
 };
 
 #endif // TIMETRACKER_H
