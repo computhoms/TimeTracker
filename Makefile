@@ -18,11 +18,14 @@ all:
 #%.o: %.cpp
 #	$(CC) -c $(CFLAGS) $< -o $@
 
-tests: bin/tests.o bin/datetime.o bin/generalworkperiod.o bin/journalentry.o bin/workday.o bin/timetracker.o bin/duration.o bin/timeplanner.o
+tests: bin/tests.o bin/datetime.o bin/generalworkperiod.o bin/journalentry.o bin/workday.o bin/timetracker.o bin/duration.o bin/timeplanner.o bin/workdaycollectionwriter.o bin/pugixml.o
 	$(CC) -std=c++11 -o bin/tests $^ $(LDFLAGS)
 
 # Construct object files from src cpp files
 bin/%.o:src/%.cpp
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+bin/pugixml.o:src/libs/pugixml/pugixml.cpp
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # bin/tests.o: src/tests.h $(LIBINCLUDES)

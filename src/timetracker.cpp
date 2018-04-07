@@ -20,7 +20,7 @@ void TimeTracker::startWorking()
         addWorkDay(existing);
     }
 
-    existing.addWorkPeriod(GeneralWorkPeriod(DateTime::now()));
+    existing.addWorkPeriod(GeneralWorkPeriod(DateTime::now().getTimeOfDay()));
 }
 
 void TimeTracker::stopWorking()
@@ -28,7 +28,7 @@ void TimeTracker::stopWorking()
     WorkDay existing = getWorkDay(DateTime::today().getDate());
     if (!existing.isNull() && existing.getCurrentWorkPeriod() != NULL)
     {
-        existing.getCurrentWorkPeriod()->setEnd(DateTime::now());
+        existing.getCurrentWorkPeriod()->setEnd();
     }
 }
 

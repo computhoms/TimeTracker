@@ -1,20 +1,20 @@
 #include "generalworkperiod.h"
 
 GeneralWorkPeriod::GeneralWorkPeriod():
-    _start       (DateTime()),
-    _end         (DateTime())
+    _start       (TimeOfDay()),
+    _end         (TimeOfDay())
 {
 
 }
 
-GeneralWorkPeriod::GeneralWorkPeriod(DateTime start):
+GeneralWorkPeriod::GeneralWorkPeriod(TimeOfDay start):
     _start       (start),
-    _end         (DateTime())
+    _end         (TimeOfDay())
 {
 
 }
 
-GeneralWorkPeriod::GeneralWorkPeriod(DateTime start, DateTime end):
+GeneralWorkPeriod::GeneralWorkPeriod(TimeOfDay start, TimeOfDay end):
     _start   (start),
     _end     (end)
 {
@@ -25,28 +25,42 @@ GeneralWorkPeriod::~GeneralWorkPeriod()
 {
 
 }
-DateTime GeneralWorkPeriod::getStart() const
+
+TimeOfDay GeneralWorkPeriod::getStart() const
 {
     return _start;
 }
 
-void GeneralWorkPeriod::setStart(const DateTime &value)
+void GeneralWorkPeriod::setStart(const TimeOfDay &value)
 {
     _start = value;
 }
-DateTime GeneralWorkPeriod::getEnd() const
+
+void GeneralWorkPeriod::setStart()
+{
+    _start = DateTime::now().getTimeOfDay();
+}
+
+TimeOfDay GeneralWorkPeriod::getEnd() const
 {
     return _end;
 }
 
-void GeneralWorkPeriod::setEnd(const DateTime &value)
+void GeneralWorkPeriod::setEnd(const TimeOfDay &value)
 {
     _end = value;
 }
 
+void GeneralWorkPeriod::setEnd()
+{
+    _end = DateTime::now().getTimeOfDay();
+}
+
 Duration GeneralWorkPeriod::getDuration() const
 {
-    return _start.distanceTo(_end);
+    DateTime start(DateTime::today().getDate(), _start);
+    DateTime end(DateTime::today().getDate(), _end);
+    return  start.distanceTo(end);
 }
 
 

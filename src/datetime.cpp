@@ -38,7 +38,7 @@ time_t DateTime::toLocalTime() const
 {
     struct tm dtm1;
     dtm1.tm_year = _date.year == 0 ? 0 : _date.year - 1900;
-    dtm1.tm_mon = _date.month;
+    dtm1.tm_mon = _date.month == 0 ? 0 : _date.month - 1;
     dtm1.tm_mday = _date.dayOfMonth;
     dtm1.tm_hour = _time.hours;
     dtm1.tm_min = _time.minutes;
@@ -57,7 +57,7 @@ DateTime DateTime::now()
 
     Date d;
     d.year = lt.tm_year + 1900;
-    d.month = lt.tm_mon;
+    d.month = lt.tm_mon + 1;
     d.dayOfMonth = lt.tm_mday;
     TimeOfDay t;
     t.hours = lt.tm_hour;
@@ -72,7 +72,7 @@ DateTime DateTime::today()
     struct tm lt = (*localtime(&t));
     Date d;
     d.year = lt.tm_year + 1900;
-    d.month = lt.tm_mon;
+    d.month = lt.tm_mon + 1;
     d.dayOfMonth = lt.tm_mday;
     return DateTime(d, TimeOfDay());
 }

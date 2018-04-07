@@ -42,7 +42,7 @@ int Duration::getSeconds() const
 double Duration::getTotalHours() const
 {
     TimeOfDay t = _time;
-    return _days * 24 + t.hours + (t.minutes / 60.0) + (t.seconds / 3600.0);
+    return _days * 24.0 + (double)t.hours + ((double)t.minutes / 60.0) + ((double)t.seconds / 3600.0);
 }
 
 /**
@@ -52,9 +52,9 @@ double Duration::getTotalHours() const
 void Duration::rearange()
 {
     double totalSeconds = getTotalSeconds();
-    double oneMinuteInSeconds = 60;
-    double oneHourInSeconds = 60 * oneMinuteInSeconds;
-    double oneDayInSeconds = 24 * oneHourInSeconds;
+    double oneMinuteInSeconds = 60.0;
+    double oneHourInSeconds = 60.0 * oneMinuteInSeconds;
+    double oneDayInSeconds = 24.0 * oneHourInSeconds;
 
 
     _days = std::floor(totalSeconds / oneDayInSeconds);
@@ -78,7 +78,7 @@ Duration &Duration::operator+=(const Duration &dur)
 
 double Duration::getTotalSeconds() const
 {
-    return _days * 24 * 3600.0 + _time.hours * 3600.0 + _time.minutes * 60.0 + _time.seconds;
+    return (double)(_days * 24.0 * 3600.0 + _time.hours * 3600.0 + _time.minutes * 60.0 + (double)_time.seconds);
 }
 
 

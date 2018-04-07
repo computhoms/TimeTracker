@@ -5,27 +5,29 @@
 #include "duration.h"
 
 /**
- * @brief The GeneralWorkPeriod class represents a working period with start and end time.
+ * @brief The GeneralWorkPeriod class represents a working period with start and end time, within a single day.
  */
 class GeneralWorkPeriod
 {
 public:
     GeneralWorkPeriod();
-    GeneralWorkPeriod(DateTime start);
-    GeneralWorkPeriod(DateTime start, DateTime end);
+    GeneralWorkPeriod(TimeOfDay start);
+    GeneralWorkPeriod(TimeOfDay start, TimeOfDay end);
     ~GeneralWorkPeriod();
 
-    DateTime getStart() const;
-    void setStart(const DateTime &value);
+    TimeOfDay getStart() const;
+    void setStart(const TimeOfDay &value);
+    void setStart();
 
-    DateTime getEnd() const;
-    void setEnd(const DateTime &value);
+    TimeOfDay getEnd() const;
+    void setEnd(const TimeOfDay &value);
+    void setEnd();
 
     Duration getDuration() const;
 
 private:
-    DateTime _start;
-    DateTime _end;
+    TimeOfDay _start;
+    TimeOfDay _end;
 };
 
 #endif // GENERALWORKPERIOD_H
