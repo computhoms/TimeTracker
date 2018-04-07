@@ -14,8 +14,10 @@ public:
     TimePlanner(Duration weeklyWorkDuration);
     ~TimePlanner();
 
-    Duration getDailyWorkDuration();
-    Duration getWeeklyWorkDuration();
+    Duration getDailyWorkDuration() const;
+    Duration getWeeklyWorkDuration() const;
+
+    Duration getRemainingTimeForWeek(Duration timeWorked) const;
 
 private:
     Duration _weeklyWorkDuration;

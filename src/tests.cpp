@@ -2,6 +2,7 @@
 #include "../../libs/catch/catch.hpp"
 #include "workday.h"
 #include "timetracker.h"
+#include "timeplanner.h"
 
 TEST_CASE("Duration::operator/")
 {
@@ -39,20 +40,30 @@ TEST_CASE("Duration::operator-")
 
 TEST_CASE("Duration::rearrange")
 {
-    int seconds = 12 + 2 * 60.0 + 1 * 3600.0 + 3 * 24 * 3600.0;
+    int seconds = 12 + 3 * 60 + 2 * 3600 + 2 * 24 * 3600;
+    REQUIRE(seconds == 180192);
     Duration d(0, TimeOfDay(0, 0, seconds));
     d.rearange();
-    REQUIRE(d.getDays() == 3);
-    REQUIRE(d.getHours() == 1);
-    REQUIRE(d.getMinutes() == 2);
+    REQUIRE(d.getDays() == 2);
+    REQUIRE(d.getHours() == 2);
+    REQUIRE(d.getMinutes() == 3);
     REQUIRE(d.getSeconds() == 12);
+}
+
+TEST_CASE("getDiffTime")
+{
+    DateTime d1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));
+    DateTime d2(Date(2018, 01, 01), TimeOfDay(10, 0, 12));
+
+    REQUIRE(getDiffTime(d1, d2) == 12);
 }
 
 TEST_CASE("DateTime::distanceTo")
 {
-    DateTime dt1(Date(2018, 01, 01), TimeOfDay(10, 0, 0));
-    DateTime dt2(Date(2018, 01, 03), TimeOfDay(12, 3, 12));
+    DateTime dt1(Date(2018, 01, 02), TimeOfDay(10, 0, 0));
+    DateTime dt2(Date(2018, 01, 04), TimeOfDay(12, 3, 12));
 
+    REQUIRE(getDiffTime(dt1, dt2) == 12 + 3 * 60 + 2 * 3600 + 2 * 3600 * 24);
 
     Duration dist = dt1.distanceTo(dt2);
     REQUIRE(dist.getDays() == 2);
@@ -178,4 +189,15 @@ TEST_CASE("TimeTracker::getTimeDurationBetween")
                                          DateTime(Date(2018, 1, 3)))
               .getTotalHours() == 7);
 
+}
+
+TEST_CASE("TimePlanner::getRemainingTimeForWeek")
+{
+    TimePlanner pl(Duration(0, TimeOfDay(42, 0, 0)));
+    Duration worked(0, TimeOfDay(18, 0, 0));
+    REQUIRE(pl.getRemainingTimeForWeek(worked).getSeconds() == 0.0);
+    REQUIRE(pl.getRemainingTimeForWeek(worked).getMinutes() == 0.0);
+    REQUIRE(pl.getRemainingTimeForWeek(worked).getHours() == 0.0);
+    REQUIRE(pl.getRemainingTimeForWeek(worked).getDays() == 1.0);
+    REQUIRE(pl.getRemainingTimeForWeek(worked).getTotalHours() == 24.0);
 }
