@@ -8,8 +8,11 @@
 class JournalEntry
 {
 public:
-    JournalEntry(std::string value);
+    JournalEntry(std::string getValue);
     ~JournalEntry();
+
+    std::string getValue() const;
+    void setValue(const std::string &value);
 
 private:
     std::string _value;

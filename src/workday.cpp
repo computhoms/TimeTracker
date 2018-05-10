@@ -56,3 +56,23 @@ GeneralWorkPeriod *WorkDay::getCurrentWorkPeriod() const
 }
 
 
+
+std::vector<GeneralWorkPeriod> WorkDay::getWorkPeriods() const
+{
+    return _workPeriods;
+}
+
+void WorkDay::setWorkPeriods(const std::vector<GeneralWorkPeriod> &workPeriods)
+{
+    _workPeriods = workPeriods;
+}
+std::vector<JournalEntry> WorkDay::getJournalEntries() const
+{
+    return _journalEntries;
+}
+
+void WorkDay::setJournalEntries(const std::vector<JournalEntry> &journalEntries)
+{
+    _journalEntries = journalEntries;
+}
+

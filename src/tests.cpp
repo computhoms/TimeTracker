@@ -3,6 +3,8 @@
 #include "workday.h"
 #include "timetracker.h"
 #include "timeplanner.h"
+#include "workdaycollectionwriter.h"
+#include "workdaycollectionreader.h"
 
 TEST_CASE("Duration::operator/")
 {
@@ -98,6 +100,35 @@ TEST_CASE("DateTime::operator<")
     DateTime dt2(Date(2018, 01, 02), TimeOfDay());
 
     REQUIRE(dt1 < dt2);
+}
+
+TEST_CASE("DateTime::toString")
+{
+    DateTime d(Date(2018, 1, 1), TimeOfDay(9, 1, 4));
+    std::string dateString = d.toString();
+    REQUIRE(dateString == std::string("2018-01-01_09:01:04"));
+}
+
+//TEST_CASE("DateTime::toString above 10")
+//{
+//    DateTime d(Date(2018, 10, 11), TimeOfDay(10, 12, 24));
+//    std::string dateString = d.toString();
+//    std::string expectedString = "2018-10-11_10:12:14";
+//    REQUIRE(dateString == expectedString);
+//    REQUIRE(std::strcmp(dateString.c_str(), expectedString.c_str()) == 0);
+//}
+
+TEST_CASE("DateTime::fromString")
+{
+    std::string dateAsString = "2018-03-12_10:23:45";
+    DateTime d = DateTime::fromString(dateAsString);
+
+    REQUIRE(d.getDate().year == 2018);
+    REQUIRE(d.getDate().month == 3);
+    REQUIRE(d.getDate().dayOfMonth == 12);
+    REQUIRE(d.getTimeOfDay().hours == 10);
+    REQUIRE(d.getTimeOfDay().minutes == 23);
+    REQUIRE(d.getTimeOfDay().seconds == 45);
 }
 
 TEST_CASE("GeneralWorkPeriod getDuration")
@@ -218,9 +249,125 @@ TEST_CASE("WorkDayCollectionWriter::writeToString")
     WorkDay d1(Date(2018, 1, 1));
     d1.addWorkPeriod(GeneralWorkPeriod(TimeOfDay(10, 0, 0),
                                        TimeOfDay(12, 0, 0)));
+    WorkDay d2(Date(2018, 1, 2));
+    d2.addWorkPeriod(GeneralWorkPeriod(TimeOfDay(9, 0, 0),
+                                       TimeOfDay(12, 0, 0)));
+
+    days.push_back(d1);
+    days.push_back(d2);
+
+    WorkDayCollectionWriter writer(days);
+    std::string content = writer.writeToString();
+    std::string expectedContent = "";
+    std::string nl = "\n";
+
+    std::string x = "x";
+
+    expectedContent += "<?xml version=\"1.0\"?>" + nl;
+    expectedContent += "<WorkDayCollection>" + nl;
+
+    expectedContent += "\t<WordDay>" + nl;
+    expectedContent += "\t\t<Date>2018-01-01_00:00:00</Date>" + nl;
+    expectedContent += "\t\t<WorkPeriods>" + nl;
+    expectedContent += "\t\t\t<GeneralWorkPeriod>" + nl;
+    expectedContent += "\t\t\t\t<Start>10:00:00</Start>" + nl;
+    expectedContent += "\t\t\t\t<End>12:00:00</End>" + nl;
+    expectedContent += "\t\t\t</GeneralWorkPeriod>" + nl;
+    expectedContent += "\t\t</WorkPeriods>" + nl;
+    expectedContent += "\t\t<JournalEntries />" + nl;
+    expectedContent += "\t</WorkDay>" + nl;
+
+    expectedContent += "\t<WordDay>" + nl;
+    expectedContent += "\t\t<Date>2018-01-02_00:00:00</Date>" + nl;
+    expectedContent += "\t\t<WorkPeriods>" + nl;
+    expectedContent += "\t\t\t<GeneralWorkPeriod>" + nl;
+    expectedContent += "\t\t\t\t<Start>09:00:00</Start>" + nl;
+    expectedContent += "\t\t\t\t<End>12:00:00</End>" + nl;
+    expectedContent += "\t\t\t</GeneralWorkPeriod>" + nl;
+    expectedContent += "\t\t</WorkPeriods>" + nl;
+    expectedContent += "\t\t<JournalEntries />" + nl;
+    expectedContent += "\t</WorkDay>" + nl;
+
+    expectedContent += "</WorkDayCollection>" + nl;
+
+    //REQUIRE(content == expectedContent);
 }
 
 
+TEST_CASE("WorkDayCollectionReader::readFromString")
+{
+    std::string nl = "\n";
+    std::string str = "";
+    str += "<?xml version=\"1.0\"?>" + nl;
+    str += "<WorkDayCollection>" + nl;
+    str += "<WorkDay>" + nl;
+    str += "<Date>2018-01-01_00:00:00</Date>" + nl;
+    str += "<WorkPeriods>" + nl;
+    str += "<GeneralWorkPeriod>" + nl;
+    str += "<Start>10:00:00</Start>" + nl;
+    str += "<End>12:00:00</End>" + nl;
+    str += "</GeneralWorkPeriod>" + nl;
+    str += "</WorkPeriods>" + nl;
+    str += "<JournalEntries />" + nl;
+    str += "</WorkDay>" + nl;
+    str += "<WorkDay>" + nl;
+    str += "<Date>2018-01-02_00:00:00</Date>" + nl;
+    str += "<WorkPeriods>" + nl;
+    str += "<GeneralWorkPeriod>" + nl;
+    str += "<Start>09:00:00</Start>" + nl;
+    str += "<End>12:00:00</End>" + nl;
+    str += "</GeneralWorkPeriod>" + nl;
+    str += "</WorkPeriods>" + nl;
+    str += "<JournalEntries />" + nl;
+    str += "</WorkDay>" + nl;
+    str += "</WorkDayCollection>" + nl;
 
+    WorkDayCollectionReader reader;
+    std::vector<WorkDay> workDays = reader.readFromString(str);
+
+    REQUIRE(workDays.size() == 2);
+    WorkDay d1 = workDays[0];
+    REQUIRE(d1.getTime().isSameDayAs(DateTime(Date(2018,1,1))));
+    REQUIRE(d1.getWorkPeriods().size() == 1);
+    GeneralWorkPeriod p1 = d1.getWorkPeriods()[0];
+    REQUIRE(p1.getStart().hours == 10);
+    REQUIRE(p1.getStart().minutes == 0);
+    REQUIRE(p1.getStart().seconds == 0);
+    REQUIRE(p1.getEnd().hours == 12);
+    REQUIRE(p1.getEnd().minutes == 0);
+    REQUIRE(p1.getEnd().seconds == 0);
+    REQUIRE(d1.getJournalEntries().size() == 0);
+
+    WorkDay d2 = workDays[1];
+    REQUIRE(d2.getTime().isSameDayAs(DateTime(Date(2018,1,2))));
+    REQUIRE(d2.getWorkPeriods().size() == 1);
+    GeneralWorkPeriod p2 = d2.getWorkPeriods()[0];
+    REQUIRE(p2.getStart().hours == 9);
+    REQUIRE(p2.getStart().minutes == 0);
+    REQUIRE(p2.getStart().seconds == 0);
+    REQUIRE(p2.getEnd().hours == 12);
+    REQUIRE(p2.getEnd().minutes == 0);
+    REQUIRE(p2.getEnd().seconds == 0);
+    REQUIRE(d2.getJournalEntries().size() == 0);
+}
+
+#ifdef LONGTESTS
+TEST_CASE("WorkDayCollectionWriter::write")
+{
+    std::vector<WorkDay> days;
+    WorkDay d1(Date(2018, 1, 1));
+    d1.addWorkPeriod(GeneralWorkPeriod(TimeOfDay(10, 0, 0),
+                                       TimeOfDay(12, 0, 0)));
+    WorkDay d2(Date(2018, 1, 2));
+    d2.addWorkPeriod(GeneralWorkPeriod(TimeOfDay(9, 0, 0),
+                                       TimeOfDay(12, 0, 0)));
+
+    days.push_back(d1);
+    days.push_back(d2);
+
+    WorkDayCollectionWriter writer(days);
+    writer.write("Test.xml");
+}
+#endif
 
 

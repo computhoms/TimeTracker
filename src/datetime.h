@@ -2,6 +2,8 @@
 #define DATETIME_H
 
 #include <ctime>
+#include <string>
+#include <vector>
 
 /**
  * @brief The Date struct represents a single day in a year
@@ -77,7 +79,18 @@ public:
     Duration distanceTo(DateTime a) const;
 
     time_t toLocalTime() const;
+
+    std::string toString() const;
+    static std::string toString(TimeOfDay const &t);
+    static std::string toString(Date const &d);
+
+    static DateTime fromString(const std::string &dateTimeAsString);
+    static TimeOfDay timeFromString(const std::string &timeAsString);
+    static Date dateFromString(const std::string &dateString);
+
 private:
+    static std::vector<std::string> parseString(std::string stringToParse, std::string delimiter);
+
     Date _date;
     TimeOfDay _time;
 };

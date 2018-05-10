@@ -1,5 +1,7 @@
 #include "datetime.h"
 #include "duration.h"
+#include <sstream>
+#include <iostream>
 
 
 DateTime::DateTime()
@@ -125,4 +127,86 @@ bool operator>(const DateTime &d1, const DateTime &d2)
 bool operator>=(const DateTime &d1, const DateTime &d2)
 {
     return getDiffTime(d1, d2) <= 0;
+}
+
+
+std::string DateTime::toString() const
+{
+    std::stringstream ss;
+    ss << DateTime::toString(_date)
+       << "_"
+       << DateTime::toString(_time);
+    return ss.str();
+}
+
+std::string DateTime::toString(const TimeOfDay &t)
+{
+    std::stringstream ss;
+    ss << (t.hours < 10 ? "0" : "") << t.hours << ":"
+       << (t.minutes < 10 ? "0" : "") << t.minutes << ":"
+       << (t.seconds < 10 ? "0" : "") << t.seconds;
+    return ss.str();
+}
+
+std::string DateTime::toString(const Date &d)
+{
+    std::stringstream ss;
+    ss << d.year << "-"
+       << (d.month < 10 ? "0" : "") << d.month << "-"
+       << (d.dayOfMonth < 10 ? "0" : "") << d.dayOfMonth;
+    return ss.str();
+}
+
+
+DateTime DateTime::fromString(const std::string &dateTimeAsString)
+{
+    std::vector<std::string> dateTime = parseString(dateTimeAsString, "_");
+    if (dateTime.size() != 2)
+        return DateTime(); // TODO ERROR
+
+    Date d = DateTime::dateFromString(dateTime[0]);
+    TimeOfDay t = DateTime::timeFromString(dateTime[1]);
+
+    return DateTime(d, t);
+}
+
+TimeOfDay DateTime::timeFromString(const std::string &timeAsString)
+{
+    std::vector<std::string> timeVector = parseString(timeAsString, ":");
+    if (timeVector.size() != 3)
+        return TimeOfDay(); // TODO ERROR
+
+    TimeOfDay t;
+    t.hours = std::stoi(timeVector[0]);
+    t.minutes = std::stoi(timeVector[1]);
+    t.seconds = std::stoi(timeVector[2]);
+    return t;
+}
+
+Date DateTime::dateFromString(const std::string &dateString)
+{
+    std::vector<std::string> dateVector = parseString(dateString, "-");
+    if (dateVector.size() != 3)
+        return Date(); // TODO ERROR
+
+    Date d;
+    d.year = std::stoi(dateVector[0]);
+    d.month = std::stoi(dateVector[1]);
+    d.dayOfMonth = std::stoi(dateVector[2]);
+    return d;
+}
+
+std::vector<std::string> DateTime::parseString(std::string stringToParse, std::string delimiter)
+{
+    size_t pos = 0;
+    std::vector<std::string> parsedStrings;
+    std::string token;
+    while ((pos = stringToParse.find(delimiter)) != std::string::npos)
+    {
+        token = stringToParse.substr(0, pos);
+        parsedStrings.push_back(token);
+        stringToParse.erase(0, pos + delimiter.length());
+    }
+    parsedStrings.push_back(stringToParse);
+    return parsedStrings;
 }

@@ -25,6 +25,13 @@ public:
     DateTime getTime() const;
     GeneralWorkPeriod *getCurrentWorkPeriod() const;
 
+
+    std::vector<GeneralWorkPeriod> getWorkPeriods() const;
+    void setWorkPeriods(const std::vector<GeneralWorkPeriod> &getWorkPeriods);
+
+    std::vector<JournalEntry> getJournalEntries() const;
+    void setJournalEntries(const std::vector<JournalEntry> &journalEntries);
+
 private:
     std::vector<GeneralWorkPeriod> _workPeriods;
     std::vector<JournalEntry> _journalEntries;
